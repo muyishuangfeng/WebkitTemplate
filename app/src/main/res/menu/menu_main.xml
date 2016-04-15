@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="io.lhyz.android.webkittemplate.MainActivity">
+    <item
+        android:id="@+id/action_share_content"
+        android:title="@string/action_share_content"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_copy_link"
+        android:title="@string/action_copy_link"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_open_browser"
+        android:title="@string/action_open_browser"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_back_page"
+        android:title="@string/action_back_page"
+        app:showAsAction="never"/>
+</menu>
