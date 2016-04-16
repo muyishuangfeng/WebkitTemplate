@@ -16,10 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -33,7 +30,7 @@ public class BrowserFragment extends Fragment implements
 
     private static final String HOME = "https://www.baidu.com";
     private static final String EXTRA_URL = "EXTRA_URL";
-//    private static final String TAG = BrowserFragment.class.getSimpleName();
+
 
     Toolbar mToolbar;
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -45,20 +42,14 @@ public class BrowserFragment extends Fragment implements
     private WebViewClient mWebViewClient = new WebViewClient() {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            mURL = url;
             view.loadUrl(url);
             return true;
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
+            mURL = url;
             mSwipeRefreshLayout.setRefreshing(false);
-        }
-
-        @Override
-        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-            super.onReceivedError(view, request, error);
-            Toast.makeText(getActivity(), "Error to load the page", Toast.LENGTH_SHORT).show();
         }
 
     };
@@ -67,13 +58,12 @@ public class BrowserFragment extends Fragment implements
 
         @Override
         public void onReceivedTitle(WebView view, String title) {
-            super.onReceivedTitle(view, title);
             setAddressView(title);
         }
 
         @Override
-        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-            return super.onJsAlert(view, url, message, result);
+        public void onProgressChanged(WebView view, int newProgress) {
+
         }
     };
 
@@ -118,7 +108,6 @@ public class BrowserFragment extends Fragment implements
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.setWebViewClient(mWebViewClient);
         mWebView.setWebChromeClient(mWebChromeClient);
-
     }
 
     @Override
@@ -162,8 +151,10 @@ public class BrowserFragment extends Fragment implements
                 share.setShareIntent(intent);
                 return true;
             case R.id.action_back_page:
-                mWebView.goBack();
-                return true;
+                if (mWebView.canGoBack()) {
+                    mWebView.goBack();
+                    return true;
+                }
         }
         return false;
     }

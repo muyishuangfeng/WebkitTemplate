@@ -113,12 +113,32 @@ mWebView.loadUrl(mURL);
 ```
 
 上述方法的可能顺序
-`mWebView.loadUrl(mURL);` -> 
+`mWebView.loadUrl(mURL);` ->
+`onReceivedTitle` -> 
 `onPageFinished` ->
-`onReceivedTitle` ->
 
 在页面内点击链接的时候会调用下面的方法
 `shouldOverrideUrlLoading` ->
 `` ->
+
+
+重新添加了一个方法：
+```java
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            Log.e("TAG", "" + newProgress);
+            mProgressBar.setProgress(newProgress);
+        }
+```
+这个方法在页面加载的过程中被调用，无论页面是loadUrl打开的还是goBack打开的。
+
+同样的还有`onPageFinished`方法，页面加载完成的时候被调用，无论页面是loadUrl打开的还是goBack打开的。
+
+`onPageFinished`调用在`onReceivedTitle`之后。
+
+尚没有好的方法解决使用goBack之后标题错乱的问题（可选的方法是在`onPageFinished`方法之后重新解析URL，就是用第三方库重新获取url网页内容，然后用正则解析出title值，不过这样对于网络和其他方面负担比较重，所以这个bug暂时不决定解决了）
+
+另，对于在`onProgressChanged`设置某些progress控件来显示进度的方法，可能会出现不显示的问题（newProgress倒是0-100的），所以设置了之后看不到东西，就算了吧。
+
 
 总结的不足，之后如果出现其他问题我会再补充的。
